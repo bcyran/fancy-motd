@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source framework.sh
+
+uptime=$(uptime -p | cut -d ' ' -f 2-)
+
+print_columns "Uptime" "$uptime"

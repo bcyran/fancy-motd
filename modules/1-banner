@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source framework.sh
+
+hostname=${HOSTNAME:-$(hostname)}
+
+print_columns "" "$(figlet $hostname)"

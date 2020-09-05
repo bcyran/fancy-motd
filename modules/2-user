@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source framework.sh
+
+user=${USER:-$(id -un)}
+hostname=${HOSTNAME:-$(hostname)}
+
+print_columns "Logged as" "${CO}$user${CN}@${CW}$hostname${CN}"
