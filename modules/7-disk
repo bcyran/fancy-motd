@@ -16,4 +16,4 @@ for name in "${!disks[@]}"; do
     text+="$(print_bar $WIDTH ${usage::-1} "$label")\n"
 done
 
-print_columns "Disk usage" "$text"
+print_columns "Disk space" "$text"
