@@ -3,7 +3,8 @@
 source "$BASE_DIR/framework.sh"
 
 memory=$(free -m | awk '/Mem/ {printf "%.0f", ($2-$6)/$2*100}')
-label="$(free -h | awk '/Mem/ {print $6}') available "
+free="$(free -h | awk '/Mem/ {print $6}')"
+label="${free::-1} available "
 memory_bar=$(print_bar $WIDTH $memory "$label")
 
 print_columns "Memory" "$memory_bar"
