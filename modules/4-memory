@@ -4,7 +4,7 @@ source "$BASE_DIR/framework.sh"
 
 memory=$(free -m | awk '/Mem/ {printf "%.0f", ($2-$6)/$2*100}')
 free="$(free -h | awk '/Mem/ {print $6}')"
-label="${free::-1} available "
+label="${free::-1} "
 memory_bar=$(print_bar $WIDTH $memory "$label")
 
-print_columns "Memory" "$memory_bar"
+print_columns "Avail. memory" "$memory_bar"
