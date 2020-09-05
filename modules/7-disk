@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+declare -A disks
+disks["Root"]="/dev/sda1"
+padding=15
+
+text=""
+all_disks="$(df -h)"
+for name in "${!disks[@]}"; do
+    disk="${disks[$name]}"
+    usage="$(awk -v pat="$disk" '$0~pat {print $5}' <<< $all_disks)"
+    free="$(awk -v pat="$disk" '$0~pat {print $4}' <<< $all_disks)"
+    label="$(printf "%-${padding}s " "$name - $free ")"
+    text+="$(print_bar $WIDTH ${usage::-1} "$label")\n"
+done
+
+print_columns "Disk usage" "$text"

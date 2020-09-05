@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+loads="$(cat /proc/loadavg | cut -d ' ' -f '1,2,3')"
+
+text=""
+for load in $loads; do
+    text+="$(print_color $load $load '1' '2'), "
+done
+
+print_columns "Load average" "${text::-2}"

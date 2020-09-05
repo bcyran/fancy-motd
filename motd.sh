@@ -7,5 +7,14 @@ export CW="\e[33m"  # Warning
 export CE="\e[31m"  # Error
 export CN="\e[0m"   # None
 
+# Max width used for components in second column
+export WIDTH=50
+
+# Don't change! We want predictable outputs
+export LANG="en_US.UTF-8"
+
+# Dir of this script
+export BASE_DIR="$(dirname $(readlink -f "$0"))"
+
 # Run all scripts and align output in columns
-run-parts modules | column -s $'\t' -t
+run-parts "$BASE_DIR/modules" | column -s $'\t' -t

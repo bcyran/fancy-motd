@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+declare -A services
+services["nginx"]="nginx"
+services["Docker"]="docker"
+services["SSH"]="sshd"
+services["Fail2Ban"]="fail2ban"
+services["Gitea"]="gitea"
+services["firewalld"]="firewalld"
+services["MySQL"]="mysql"
+services["PHP-FPM"]="php-fpm"
+
+statuses=()
+for key in "${!services[@]}"; do
+    status=$(systemctl is-active ${services[$key]})
+    statuses+=("$(print_status "$key" "$status")")
+done
+
+text="$(print_wrap $WIDTH "${statuses[@]}")"
+
+print_columns "Services" "$text"

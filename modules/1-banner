@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source framework.sh
+source "$BASE_DIR/framework.sh"
 
 hostname=${HOSTNAME:-$(hostname)}
 
