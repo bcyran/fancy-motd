@@ -4,4 +4,4 @@ source "$BASE_DIR/framework.sh"
 
 hostname=${HOSTNAME:-$(hostname)}
 
-print_columns "" "$(figlet $hostname)"
+print_columns "" "${CA}$(figlet $hostname)${CN}"

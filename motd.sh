@@ -16,12 +16,16 @@ export LANG="en_US.UTF-8"
 # Dir of this script
 export BASE_DIR="$(dirname $(readlink -f "$0"))"
 
+# Source the framework
+source "$BASE_DIR/framework.sh"
+
 # Run the modules and collect output
 output=""
 modules="$(ls -1 "$BASE_DIR/modules")"
-while read module; do
-    output+="$($BASE_DIR/modules/$module)\n"
+while read -r module; do
+    output+="$($BASE_DIR/modules/$module)"
+    output+=$'\n'
 done <<< $modules
 
-# Align output in columns and print
-echo -e "$output" | column -s $'\t' -t
+# Print the output in pretty columns
+columnize "$output" $'\t' $'\n'

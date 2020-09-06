@@ -94,3 +94,32 @@ print_wrap() {
 strip_ansi() {
     echo "$(echo -e "$1" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g")"
 }
+
+# Following is basically simple `column` reimplementation because it doesn't work consistently.
+# I fucked way too long with this.
+# $1 - text to columnize
+# $2 - column separator
+# $3 - row separator
+columnize() {
+    left_lines=()       # Lines in left column
+    left_widths=()      # Numbers of visible chars in left lines
+    right_lines=()      # Lines in right column
+    max_left_width=0    # Max width of left column line
+    # Iterate over lines and populate above variables
+    while IFS="$3" read -r line; do
+        left="$(echo -e "$line" | cut -d "$2" -f 1)"
+        right="$(echo -e "$line" | cut -d "$2" -f 2)"
+        left_lines+=("$left")
+        right_lines+=("$right")
+        visible_left="$(strip_ansi "$left")"
+        left_widths+=(${#visible_left})
+        [ ${#visible_left} -gt $max_left_width ] && max_left_width=${#visible_left}
+    done <<< $1
+
+    # Iterate over lines and print them while padding left column with spaces
+    for ((i=0; i<${#left_lines[@]}-1; i++)); do
+        padding_width=$((max_left_width - left_widths[$i]))
+        padding="$(print_n " " $padding_width)"
+        echo -e "${left_lines[$i]}${padding}  ${right_lines[$i]}"
+    done
+}
