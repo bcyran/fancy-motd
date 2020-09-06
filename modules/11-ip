@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+ip="$(ip a | awk '/global/ {print $2}' | cut -d '/' -f 1)"
+
+print_columns "IP addr" "$ip"
