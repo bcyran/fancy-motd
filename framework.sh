@@ -2,6 +2,7 @@
 # $1 - left column
 # $2 - right column
 print_columns() {
+    [ -z "$2" ] && return
     paste <(echo -e "${CA}$1${1:+:}${CN}") <(echo -e "$2")
 }
 
@@ -86,7 +87,7 @@ print_wrap() {
         out+="$element "
         line_length=$(($line_length + ${#visible_elelement}))
     done
-    echo "${out::-2}"
+    [ -n "$out" ] && echo "${out::-2}"
 }
 
 # Strips ANSI color codes from given string
