@@ -90,6 +90,20 @@ print_wrap() {
     [ -n "$out" ] && echo "${out::-2}"
 }
 
+# Prints some text justified to left and some justified to right
+# $1 - total width
+# $2 - left text
+# $3 - right text
+print_split() {
+    if (( ${#2} + ${#3} < $1 )); then
+        first_half_width=${#2}
+    else
+        first_half_width=$(($1 / 2))
+    fi
+    second_half_width=$(($1 - first_half_width))
+    printf "%-${first_half_width}s%${second_half_width}s" "$2" "$3"
+}
+
 # Strips ANSI color codes from given string
 # $1 - text to strip
 strip_ansi() {

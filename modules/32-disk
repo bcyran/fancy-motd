@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+declare -A disks
+disks["Root"]="/dev/sda1"
+padding=15
+
+text=""
+all_disks="$(df -h)"
+for name in "${!disks[@]}"; do
+    disk="${disks[$name]}"
+    stats="$(awk -v pat="$disk" '$0~pat {print $2,$3,$4,$5}' <<< $all_disks)"
+    IFS=" " read -r total used free percentage <<< $stats
+    label="$(print_split $WIDTH "$name - $used used, $free free" "/ $total")"
+    text+="$label\n$(print_bar $WIDTH ${percentage::-1})\n"
+done
+
+print_columns "Disk space" "${text::-2}"

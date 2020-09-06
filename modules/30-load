@@ -4,11 +4,11 @@ source "$BASE_DIR/framework.sh"
 
 loads="$(cat /proc/loadavg | cut -d ' ' -f '1,2,3')"
 nproc=$(nproc)
+warning_threshold=$(bc -l <<< "$nproc * 0.9")
+error_threshold=$(bc -l <<< "$nproc * 1.5")
 
 text=""
 for load in $loads; do
-    warning_threshold=$(bc -l <<< "$nproc * 0.9")
-    error_threshold=$(bc -l <<< "$nproc * 1.5")
     text+="$(print_color $load $load $warning_threshold $error_threshold), "
 done
 

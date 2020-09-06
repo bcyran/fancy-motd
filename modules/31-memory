@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+freeh="$(free -h)"
+freem="$(free -m)"
+
+ram() {
+    local memory total used available label percentage bar
+    memory="$(awk '/Mem/ {print $2,$3,$7}' <<< $freeh)"
+    IFS=" " read -r total used available <<< $memory
+    label="$(print_split $WIDTH "RAM - ${used::-1} used, ${available::-1} available" "/ ${total::-1}")"
+
+    percentage=$(awk '/Mem/ {printf "%.0f", ($2-$7)/$2*100}' <<< $freem)
+    bar="$(print_bar $WIDTH $percentage)"
+
+    echo "$label\n$bar"
+}
+
+swap() {
+    local swap total used available label percentage bar
+    swap="$(awk '/Swap/ {print $2,$3,$4}' <<< $freeh)"
+    IFS=" " read -r total used available <<< $swap
+    label="$(print_split $WIDTH "Swap - ${used::-1} used, ${available::-1} available" "/ ${total::-1}")"
+
+    percentage=$(awk '/Swap/ {printf "%.0f", $3/$2*100}' <<< $freem)
+    bar="$(print_bar $WIDTH $percentage)"
+
+    echo "$label\n$bar"
+}
+
+print_columns "Memory" "$(ram)\n$(swap)"
