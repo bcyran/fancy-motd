@@ -19,6 +19,10 @@ ram() {
 
 swap() {
     local swap total used available label percentage bar
+
+    # Return if no swap
+    [ "$(awk '/Swap/ {print $2}' <<< $freem)" -eq 0 ] && return
+
     swap="$(awk '/Swap/ {print $2,$3,$4}' <<< $freeh)"
     IFS=" " read -r total used available <<< $swap
     label="$(print_split $WIDTH "Swap - ${used::-1} used, ${available::-1} available" "/ ${total::-1}")"
@@ -29,4 +33,8 @@ swap() {
     echo "$label\n$bar"
 }
 
-print_columns "Memory" "$(ram)\n$(swap)"
+out="$(ram)"
+swap="$(swap)"
+[ -n "$swap" ] && out+="\n$swap"
+
+print_columns "Memory" "$out"
