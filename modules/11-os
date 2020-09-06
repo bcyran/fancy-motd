@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+source "/etc/os-release"
+
+print_columns "OS" "$NAME"
