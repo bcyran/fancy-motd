@@ -16,5 +16,12 @@ export LANG="en_US.UTF-8"
 # Dir of this script
 export BASE_DIR="$(dirname $(readlink -f "$0"))"
 
-# Run all scripts and align output in columns
-run-parts "$BASE_DIR/modules" | column -s $'\t' -t
+# Run the modules and collect output
+output=""
+modules="$(ls -1 "$BASE_DIR/modules")"
+while read module; do
+    output+="$($BASE_DIR/modules/$module)\n"
+done <<< $modules
+
+# Align output in columns and print
+echo -e "$output" | column -s $'\t' -t
