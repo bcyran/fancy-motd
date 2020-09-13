@@ -13,8 +13,8 @@ export WIDTH=50
 # Don't change! We want predictable outputs
 export LANG="en_US.UTF-8"
 
-# Dir of this script
-export BASE_DIR="$(dirname $(readlink -f "$0"))"
+# Dir of this scrip
+export BASE_DIR="$(dirname "$(readlink -f "$0")")"
 
 # Source the framework
 source "$BASE_DIR/framework.sh"
@@ -26,7 +26,6 @@ while read -r module; do
     module_output="$($BASE_DIR/modules/$module)"
     output+="$module_output"
     [ -n "$module_output" ] && output+=$'\n'
-
 done <<< $modules
 
 # Print the output in pretty columns

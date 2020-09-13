@@ -2,6 +2,9 @@
 
 source "$BASE_DIR/framework.sh"
 
-ip="$(ip a | awk '/global/ {print $2}' | cut -d '/' -f 1)"
+ips_v4="$(ip a | awk '/inet / && /global/ {split($2, arr, /\//); print arr[1]}')"
+IFS=$'\n' read -d '' -r -a ips <<< $ips_v4
 
-print_columns "IP addr" "$ip"
+text="$(print_wrap $WIDTH "${ips[@]}")"
+
+print_columns "IP addresses" "$text"
