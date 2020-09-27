@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+sessions="$(tmux ls 2>&1)"
+
+text=""
+if grep -q 'no server running' <<< $sessions; then
+    text+="no sessions\n"
+else
+    while IFS= read -r line; do
+        name="$(cut -d ':' -f 1 <<< $line)"
+        windows="$(cut -d ' ' -f 2,3 <<< $line)"
+        date="$(cut -d ' ' -f 5,6,7,8 <<< $line)"
+        text+="$(print_split $WIDTH "$name ($windows)" "$date")\n"
+    done <<< $sessions
+fi
+
+print_columns "Tmux sessions" "${text::-2}"

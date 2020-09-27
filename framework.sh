@@ -116,6 +116,8 @@ strip_ansi() {
 # $2 - column separator
 # $3 - row separator
 columnize() {
+    local left_lines left_widths right_lines max_left_width left right visible_left \
+        padding_width padding
     left_lines=()       # Lines in left column
     left_widths=()      # Numbers of visible chars in left lines
     right_lines=()      # Lines in right column
