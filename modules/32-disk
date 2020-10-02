@@ -2,18 +2,28 @@
 
 source "$BASE_DIR/framework.sh"
 
-declare -A disks
-disks["Root"]="/dev/sda1"
+is_mounted()
+{
+    df -l | awk '{ print $1 }' | grep -q "${1}$"
+}
+
+disks=($(lsblk --noheadings --list --output name))
 padding=15
 
 text=""
 all_disks="$(df -h)"
 for name in "${!disks[@]}"; do
     disk="${disks[$name]}"
-    stats="$(awk -v pat="$disk" '$0~pat {print $2,$3,$4,$5}' <<< $all_disks)"
-    IFS=" " read -r total used free percentage <<< $stats
-    label="$(print_split $WIDTH "$name - $used used, $free free" "/ $total")"
-    text+="$label\n$(print_bar $WIDTH ${percentage::-1})\n"
+    device="/dev/${disk}"
+    is_mounted ${device}
+    if [ $? -eq 0 ]
+    then
+        stats="$(awk -v pat="$disk" '$0~pat {print $2,$3,$4,$5}' <<< $all_disks)"
+        IFS=" " read -r total used free percentage <<< $stats
+        mp=$(df -l --output=target ${device} | tail -n1)
+        label="$(print_split $WIDTH "${disks[name]} - mounted on ${mp} - $used used, $free free" "/ $total")"
+        text+="$label\n$(print_bar $WIDTH ${percentage::-1})\n"
+    fi
 done
 
 print_columns "Disk space" "${text::-2}"

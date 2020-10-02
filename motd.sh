@@ -8,7 +8,7 @@ export CE="\e[31m"  # Error
 export CN="\e[0m"   # None
 
 # Max width used for components in second column
-export WIDTH=50
+export WIDTH=80
 
 # Don't change! We want predictable outputs
 export LANG="en_US.UTF-8"
