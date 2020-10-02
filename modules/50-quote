@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source "$BASE_DIR/framework.sh"
+
+quote=$(fortune -s)
+
+print_columns "Quote" "$quote"
