@@ -3,5 +3,6 @@
 source "$BASE_DIR/framework.sh"
 
 quote=$(fortune -s)
+text="$(print_wrap $WIDTH "$quote")"
 
-print_columns "Quote" "$quote"
+print_columns "Quote" "$text"
