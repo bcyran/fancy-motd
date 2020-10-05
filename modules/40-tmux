@@ -3,8 +3,9 @@
 set -euo pipefail
 source "$BASE_DIR/framework.sh"
 
-sessions="$(tmux ls 2>&1)"
-tmux_exit="$?"
+type tmux >/dev/null 2>&1 || exit 1
+
+set +e; sessions="$(tmux ls 2>&1)"; tmux_exit="$?"; set -e
 
 text=""
 if [ $tmux_exit -ne 0 ]; then
