@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
 source "$BASE_DIR/framework.sh"
 
 source "/etc/os-release"

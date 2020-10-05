@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
 source "$BASE_DIR/framework.sh"
 
 loads="$(cat /proc/loadavg | cut -d ' ' -f '1,2,3')"

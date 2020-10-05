@@ -20,13 +20,12 @@ print_n() {
 # Prints bar divided in two parts by given percentage
 # $1 - bar width
 # $2 - percentage
-# $3 - label
 print_bar() {
-    local bar_width=$(($1 - 2 - ${#3}))
+    local bar_width=$(($1 - 2))
     local used_width=$(($2 * $bar_width / 100))
     local free_width=$(($bar_width - $used_width))
     local out=""
-    out+="$3["
+    out+="["
     out+="${CE}"
     out+=$(print_n "=" $used_width)
     out+="${CO}"

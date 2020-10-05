@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
 source "$BASE_DIR/framework.sh"
 
 ips_v4="$(ip a | awk '/inet / && /global/ {split($2, arr, /\//); print arr[1]}')"

@@ -23,7 +23,8 @@ source "$BASE_DIR/framework.sh"
 output=""
 modules="$(ls -1 "$BASE_DIR/modules")"
 while read -r module; do
-    module_output="$($BASE_DIR/modules/$module)"
+    module_output="$($BASE_DIR/modules/$module 2>/dev/null)"
+    [ $? -ne 0 ] && continue
     output+="$module_output"
     [ -n "$module_output" ] && output+=$'\n'
 done <<< $modules
