@@ -2,7 +2,6 @@
 
 source "$BASE_DIR/framework.sh"
 
-quote=$(fortune -s)
-text="$(print_wrap $WIDTH "$quote")"
+quote="$(fortune -s | fold -sw $WIDTH)"
 
-print_columns "Quote" "$text"
+print_columns "Quote" "$quote"
