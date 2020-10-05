@@ -15,7 +15,8 @@ services["PHP-FPM"]="php-fpm"
 
 statuses=()
 for key in "${!services[@]}"; do
-    status=$(systemctl is-active ${services[$key]})
+    # systemctl is-active returns non-zero code if service is inactive
+    set +e; status=$(systemctl is-active ${services[$key]}); set -e
     statuses+=("$(print_status "$key" "$status")")
 done
 
