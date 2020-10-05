@@ -3,9 +3,10 @@
 source "$BASE_DIR/framework.sh"
 
 sessions="$(tmux ls 2>&1)"
+tmux_exit="$?"
 
 text=""
-if grep -q 'no server running' <<< $sessions; then
+if [ $tmux_exit -ne 0 ]; then
     text+="no sessions\n"
 else
     while IFS= read -r line; do
