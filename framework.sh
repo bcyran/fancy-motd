@@ -104,6 +104,25 @@ print_split() {
     printf "%-${first_half_width}s%${second_half_width}s" "$2" "$3"
 }
 
+# Prints one line of text, truncates it at specified width and add ellipsis.
+# Truncation can occur either at the start or at the end of the string.
+# $1 - line to print
+# $2 - width limit
+# $3 - "start" or "end", default "end"
+print_truncate() {
+    local out
+    local new_length=$(($2 - 1))
+    # Just echo the string if it's shorter than the limit
+    if [ ${#1} -le $2 ]; then
+        out="$1"
+    elif [ -z "$3" ] || [ "$3" = "end" ]; then
+        out="${1::$new_length}…"
+    else
+        out="…${1: -$new_length}"
+    fi
+    echo "$out"
+}
+
 # Strips ANSI color codes from given string
 # $1 - text to strip
 strip_ansi() {
