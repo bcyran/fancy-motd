@@ -1,3 +1,17 @@
+# Source the config
+source "$BASE_DIR/config.sh"
+
+# Provide default values for obligatory settings
+# Colors
+CA="${CA:-\e[34m}"  # Accent
+CO="${CO:-\e[32m}"  # Ok
+CW="${CW:-\e[33m}"  # Warning
+CE="${CE:-\e[31m}"  # Error
+CN="${CN:-\e[0m}"   # None
+
+# Max width used for components in second column
+WIDTH="${WIDTH:-50}"
+
 # Prints given blocks of text side by side
 # $1 - left column
 # $2 - right column
