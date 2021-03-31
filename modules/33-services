@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
 
+# Default services, have to be declared before sourcing framework.sh so the user can override them
 declare -A services
 services["nginx"]="nginx"
 services["Docker"]="docker"
@@ -12,6 +12,8 @@ services["Gitea"]="gitea"
 services["firewalld"]="firewalld"
 services["MySQL"]="mysql"
 services["PHP-FPM"]="php-fpm"
+
+source "$BASE_DIR/framework.sh"
 
 statuses=()
 for key in "${!services[@]}"; do

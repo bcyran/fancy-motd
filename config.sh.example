@@ -7,3 +7,14 @@ CN="\e[0m"   # None
 
 # Max width used for components in second column
 WIDTH=50
+
+# Services to show
+declare -A services
+services["nginx"]="nginx"
+services["Docker"]="docker"
+services["SSH"]="sshd"
+services["Fail2Ban"]="fail2ban"
+services["Gitea"]="gitea"
+services["firewalld"]="firewalld"
+services["MySQL"]="mysql"
+services["PHP-FPM"]="php-fpm"
