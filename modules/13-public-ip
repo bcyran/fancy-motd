@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+source "$BASE_DIR/framework.sh"
+
+ip_v4="$(curl ifconfig.me/ip)"
+
+text="$(print_wrap $WIDTH "${ip_v4}")"
+
+print_columns "Public IP address" "$text"
