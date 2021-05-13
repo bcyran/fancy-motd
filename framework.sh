@@ -1,5 +1,5 @@
 # Source the config
-source "$BASE_DIR/config.sh"
+source "$CONFIG_PATH"
 
 # Provide default values for obligatory settings
 # Colors
