@@ -6,6 +6,13 @@ export LANG="en_US.UTF-8"
 # Dir of this scrip
 export BASE_DIR="$(dirname "$(readlink -f "$0")")"
 
+# Set config path
+if [ -z ${1+x} ]; then
+    export CONFIG_PATH="$BASE_DIR/config.sh"
+else
+    export CONFIG_PATH="$1"
+fi
+
 # Source the framework
 source "$BASE_DIR/framework.sh"
 
