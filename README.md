@@ -6,20 +6,19 @@ Fancy, colorful MOTD written in bash. Server status at a glance.
 ## Usage
 
 ### Running
-Clone the repository
+Clone the repository:
 ```shell
 git clone https://github.com/bcyran/fancy-motd.git
-./fancy-motd/motd.sh
 ```
 
-Then run `motd.sh`
+Then run `motd.sh`:
 ```shell
 ./fancy-motd/motd.sh
 ```
 
-If you have the config at on other location just pass the location and run `motd.sh`
+If you have the config at on other location just pass the location while running `motd.sh`:
 ```shell
-./fancy-motd/motd.sh config.sh
+./fancy-motd/motd.sh ./path/to/config.sh
 ```
 
 This runs all the scripts in `modules` directory in order, `run-parts` style, and formats the output.
