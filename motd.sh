@@ -18,7 +18,7 @@ source "$BASE_DIR/framework.sh"
 
 # Run the modules and collect output
 output=""
-modules="$(ls -1 "$BASE_DIR/modules")"
+modules="$(ls -1 "$BASE_DIR/modules" | grep -P '^(?<!\d)\d{2}(?!\d)-')"
 while read -r module; do
     module_output="$($BASE_DIR/modules/$module 2>/dev/null)"
     [ $? -ne 0 ] && continue
