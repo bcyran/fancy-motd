@@ -72,5 +72,7 @@ cp config.sh.example config.sh
 To add a new module you can create a new script in `modules` directory.
 For the output to be properly formatted it has to use `print_columns` function from `framework.sh`, please refer to the existing modules.
 
+Module files have to start with a two digit number followed by a hyphen. You may disable modules by simply rename the module file.
+
 ## Credits
 Fancy MOTD is hugely inspired by [this repo](https://github.com/HermannBjorgvin/MOTD) by Hermann Björgvin.
