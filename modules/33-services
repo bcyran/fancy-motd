@@ -4,19 +4,21 @@ set -euo pipefail
 
 # Default services, have to be declared before sourcing framework.sh so the user can override them
 declare -A services
-services["nginx"]="nginx"
-services["Docker"]="docker"
-services["SSH"]="sshd"
-services["Fail2Ban"]="fail2ban"
-services["UFW"]="ufw"
+services["nginx"]="Nginx"
+services["docker"]="Docker"
+services["sshd"]="SSH"
+services["fail2ban"]="Fail2Ban"
+services["ufw"]="UFW"
 
 source "$BASE_DIR/framework.sh"
 
 statuses=()
 for key in "${!services[@]}"; do
-    # systemctl is-active returns non-zero code if service is inactive
-    set +e; status=$(systemctl is-active ${services[$key]}); set -e
-    statuses+=("$(print_status "$key" "$status")")
+    if [ $(systemctl list-unit-files "$key.service" | wc -l) -gt 3 ]; then
+        # systemctl is-active returns non-zero code if service is inactive
+        set +e; status=$(systemctl is-active $key.service); set -e
+        statuses+=("$(print_status "${services[$key]}" "$status")")
+    fi
 done
 
 text="$(print_wrap $WIDTH "${statuses[@]}")"
