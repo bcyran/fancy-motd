@@ -15,8 +15,7 @@ source "$BASE_DIR/framework.sh"
 statuses=()
 for key in "${!services[@]}"; do
     if [ $(systemctl list-unit-files "$key.service" | wc -l) -gt 3 ]; then
-        # systemctl is-active returns non-zero code if service is inactive
-        set +e; status=$(systemctl is-active $key.service); set -e
+        status=$(systemctl show -p ActiveState --value $key.service);
         statuses+=("$(print_status "${services[$key]}" "$status")")
     fi
 done
