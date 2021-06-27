@@ -108,13 +108,21 @@ print_wrap() {
 # $2 - left text
 # $3 - right text
 print_split() {
-    if (( ${#2} + ${#3} < $1 )); then
+    visible_first="$(strip_ansi "$2")"
+    visible_second="$(strip_ansi "$3")"
+    invisible_first_width=$((${#2} - ${#visible_first}))
+    invisible_second_width=$((${#3} - ${#visible_second}))
+    total_width=$(($1 + invisible_first_width + invisible_second_width))
+
+    if (( ${#visible_first} + ${#visible_second} < $1 )); then
         first_half_width=${#2}
     else
         first_half_width=$(($1 / 2))
     fi
-    second_half_width=$(($1 - first_half_width))
-    printf "%-${first_half_width}s%${second_half_width}s" "$2" "$3"
+    second_half_width=$((total_width - first_half_width))
+
+    format_string="%-${first_half_width}s%${second_half_width}s"
+    printf $format_string "${2:0:$first_half_width}" "${3:0:$second_half_width}"
 }
 
 # Prints one line of text, truncates it at specified width and add ellipsis.
