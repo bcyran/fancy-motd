@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+source "$BASE_DIR/framework.sh"
+
+type docker >/dev/null 2>&1 || exit 1
+
+containers="$(docker ps -a --format "{{ .Names }}\t{{ .Status }}\t{{ .State }}")"
+
+text=""
+while IFS= read -r line; do
+    IFS=$'\t' read -r name description state <<< "$line"
+    case $state in
+        running) color="${CO}";;
+        paused | restarting) color="${CW}";;
+        exited | dead) color="${CE}";;
+        *) color="${CN}";;
+    esac;
+    text+="$(print_split $WIDTH "$name" "${color}${description,,}${CN}")\n"
+done <<< $containers
+
+print_columns "Docker" "${text::-2}"
+
