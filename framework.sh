@@ -108,6 +108,9 @@ print_wrap() {
 # $2 - left text
 # $3 - right text
 print_split() {
+    local visible_first visible_second invisible_first_width invisible_second_width total_width \
+        first_half_width second_half_width format_string
+
     visible_first="$(strip_ansi "$2")"
     visible_second="$(strip_ansi "$3")"
     invisible_first_width=$((${#2} - ${#visible_first}))
