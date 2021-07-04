@@ -3,7 +3,7 @@
 set -euo pipefail
 source "$BASE_DIR/framework.sh"
 
-disks=($(df | grep '^/dev' | cut -d' ' -f1 ))
+disks=($(df | grep '^/dev' | cut -d' ' -f1 | sort -u))
 all_disks_stats="$(df -h)"
 
 text=""
