@@ -14,8 +14,8 @@ source "$BASE_DIR/framework.sh"
 
 statuses=()
 for key in "${!services[@]}"; do
-    if [ $(systemctl list-unit-files "$key.service" | wc -l) -gt 3 ]; then
-        status=$(systemctl show -p ActiveState --value $key.service);
+    if [ $(systemctl list-unit-files "${key}*" | wc -l) -gt 3 ]; then
+        status=$(systemctl show -p ActiveState --value "$key");
         statuses+=("$(print_status "${services[$key]}" "$status")")
     fi
 done
