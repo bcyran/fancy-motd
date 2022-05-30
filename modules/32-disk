@@ -3,17 +3,20 @@
 set -euo pipefail
 source "$BASE_DIR/framework.sh"
 
-disks=($(df | grep '^/dev' | cut -d' ' -f1 | sort -u))
-all_disks_stats="$(df -h)"
+excluded_types=(
+    "devtmpfs"
+    "ecryptfs"
+    "squashfs"
+    "tmpfs"
+)
+
+disks="$(df -h --local --print-type $(printf " -x %s" "${excluded_types[@]}") | tail -n +2 | sort -u -k 7)"
 
 text=""
-for disk in "${disks[@]}"; do
-    grep -q "$disk\s" <<< $all_disks_stats || continue
+while IFS= read -r disk; do
+    IFS=" " read -r filesystem type total used free percentage mountpoint <<< $disk
 
-    stats="$(awk -v pat="$disk" '$0~pat {print $2,$3,$4,$5,$6}' <<< $all_disks_stats)"
-    IFS=" " read -r total used free percentage mountpoint <<< $stats
-
-    device="$(sed 's/\/dev//g;s/\/mapper//g;s/^.\{1\}//' <<< $disk)"
+    device="$(sed 's|/dev||g;s|/mapper||g;s|/||g' <<< $filesystem)"
     left_label="$device () - $used used, $free free"
     right_label="/ $total"
     free_width=$(( $WIDTH - ${#left_label} - ${#right_label} - 1 ))
@@ -22,6 +25,6 @@ for disk in "${disks[@]}"; do
 
     label="$(print_split $WIDTH "$left_label" "$right_label")"
     text+="$label\n$(print_bar $WIDTH ${percentage::-1})\n"
-done
+done <<< $disks
 
 print_columns "Disk space" "${text::-2}"
