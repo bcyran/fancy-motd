@@ -16,7 +16,7 @@ text=""
 while IFS= read -r disk; do
     IFS=" " read -r filesystem type total used free percentage mountpoint <<< $disk
 
-    device="$(sed 's|/dev||g;s|/mapper||g;s|/||g' <<< $filesystem)"
+    device="$(sed 's|/dev||g;s|/mapper||g;s|^/||g' <<< $filesystem)"
     left_label="$device () - $used used, $free free"
     right_label="/ $total"
     free_width=$(( $WIDTH - ${#left_label} - ${#right_label} - 1 ))
