@@ -2,7 +2,7 @@
 
 set -euo pipefail
 # shellcheck source=./framework.sh
-source "${BASE_DIR:}/framework.sh"
+source "${BASE_DIR}/framework.sh"
 
 hostname=${HOSTNAME:-$(hostname)}
 

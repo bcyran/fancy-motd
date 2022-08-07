@@ -7,11 +7,18 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Run ShellCheck
-      uses: ludeeus/action-shellcheck@master
-      env:
-        SHELLCHECK_OPTS: --enable avoid-nullary-conditions,require-variable-braces,require-double-brackets --external-sources
-      with:
-        additional_files: modules/*
-        check_together: yes
+      - uses: actions/checkout@v2
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        env:
+          SHELLCHECK_OPTS: --enable avoid-nullary-conditions,require-variable-braces,require-double-brackets --external-sources
+        with:
+          additional_files: modules/*
+          check_together: yes
+  shfmt:
+    name: shfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: mfinelli/setup-shfmt@v1
+      - run: shfmt -i 4 -bn -ci -sr -d motd.sh framework.sh modules/*
