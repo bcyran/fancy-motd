@@ -51,6 +51,7 @@ In order to run all the available modules the following programs are required:
 * [`curl`](https://curl.se/)
 * [`bc`](https://www.gnu.org/software/bc/)
 * [`fortune`](https://software.clapper.org/fortune/)
+* [`lm-sensors`](https://github.com/lm-sensors/lm-sensors)
 
 This list excludes the obvious ones, like [`tmux`](https://github.com/tmux/tmux) for `tmux` module.
 

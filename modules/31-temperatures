@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+source "$BASE_DIR/framework.sh"
+
+cores="$(sensors | awk '/Core/ { print substr($3, 2, length($3) - 3), substr($6, 2, length($6) - 4), substr($9, 2, length($9) - 4) }')"
+
+text=""
+while IFS= read -r line; do
+    IFS=" " read -r current high critical <<< "${line}"
+
+    if [[ "${high}" == "${critical}" ]]; then
+        high=$(bc -l <<< "${high} - 20")
+    fi
+
+    text+="$(print_color "${current}°C" "${current}" "${high}" "${critical}"), "
+done <<< "${cores}"
+
+print_columns "Temperatures" "${text::-2}"
