@@ -21,6 +21,6 @@ for key in "${!services[@]}"; do
     fi
 done
 
-text="$(print_wrap "${WIDTH}" "${statuses[@]}")"
+text=$(print_wrap "${WIDTH}" "${statuses[@]}")
 
 print_columns "Services" "${text}"

@@ -9,7 +9,7 @@ type docker > /dev/null 2>&1 || exit 1
 containers=$(docker ps -a --format "{{ .Names }}\t{{ .Status }}\t{{ .State }}")
 
 text=""
-if [ -z "${containers}" ]; then
+if [[ -z "${containers}" ]]; then
     text+="no containers\n"
 else
     while IFS= read -r line; do
