@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-# shellcheck source=../framework.sh
+# shellcheck source=./framework.sh
 source "${BASE_DIR}/framework.sh"
 
 type tmux > /dev/null 2>&1 || exit 1

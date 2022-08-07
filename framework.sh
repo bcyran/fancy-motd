@@ -104,7 +104,7 @@ print_wrap() {
         out+="${element} "
         line_length=$((line_length + ${#visible_elelement}))
     done
-    [ -n "${out}" ] && echo "${out::-2}"
+    [[ -n "${out}" ]] && echo "${out::-2}"
 }
 
 # Prints some text justified to left and some justified to right

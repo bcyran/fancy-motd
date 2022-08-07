@@ -10,7 +10,7 @@ services["sshd"]="SSH"
 services["fail2ban"]="Fail2Ban"
 services["ufw"]="UFW"
 
-# shellcheck source=../framework.sh
+# shellcheck source=./framework.sh
 source "${BASE_DIR}/framework.sh"
 
 statuses=()

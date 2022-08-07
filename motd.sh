@@ -8,7 +8,7 @@ BASE_DIR=$(dirname "$(readlink -f "$0")")
 export BASE_DIR
 
 # Set config path
-if [ -z ${1+x} ]; then
+if [[ -z ${1+x} ]]; then
     export CONFIG_PATH="${BASE_DIR}/config.sh"
 else
     export CONFIG_PATH="$1"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -eu
-# shellcheck source=../framework.sh
+# shellcheck source=./framework.sh
 source "${BASE_DIR}/framework.sh"
 
 if type checkupdates >/dev/null 2>&1; then

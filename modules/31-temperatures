@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-# shellcheck source=../framework.sh
+# shellcheck source=./framework.sh
 source "${BASE_DIR}/framework.sh"
 
 cores="$(sensors | awk '/Core/ { print substr($3, 2, length($3) - 3), substr($6, 2, length($6) - 4), substr($9, 2, length($9) - 4) }')"
