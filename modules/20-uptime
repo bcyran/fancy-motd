@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
 uptime=$(uptime -p | cut -d ' ' -f 2-)
 
-print_columns "Uptime" "$uptime"
+print_columns "Uptime" "${uptime}"

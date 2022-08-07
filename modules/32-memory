@@ -1,41 +1,42 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
-freeh="$(free -h)"
-freem="$(free -m)"
+freeh=$(free -h)
+freem=$(free -m)
 
 ram() {
     local memory total used available label percentage bar
-    memory="$(awk '/Mem/ {print $2,$3,$7}' <<< $freeh)"
-    IFS=" " read -r total used available <<< $memory
-    label="$(print_split $WIDTH "RAM - ${used::-1} used, ${available::-1} available" "/ ${total::-1}")"
+    memory=$(awk '/Mem/ {print $2,$3,$7}' <<< "${freeh}")
+    IFS=" " read -r total used available <<< "${memory}"
+    label=$(print_split "${WIDTH}" "RAM - ${used::-1} used, ${available::-1} available" "/ ${total::-1}")
 
-    percentage=$(awk '/Mem/ {printf "%.0f", ($2-$7)/$2*100}' <<< $freem)
-    bar="$(print_bar $WIDTH $percentage)"
+    percentage=$(awk '/Mem/ {printf "%.0f", ($2-$7)/$2*100}' <<< "${freem}")
+    bar=$(print_bar "${WIDTH}" "${percentage}")
 
-    echo "$label\n$bar"
+    printf "%s\n%s" "${label}" "${bar}"
 }
 
 swap() {
     local swap total used available label percentage bar
 
     # Return if no swap
-    [ "$(awk '/Swap/ {print $2}' <<< $freem)" -eq 0 ] && return
+    [ "$(awk '/Swap/ {print $2}' <<< "${freem}")" -eq 0 ] && return
 
-    swap="$(awk '/Swap/ {print $2,$3,$4}' <<< $freeh)"
-    IFS=" " read -r total used available <<< $swap
-    label="$(print_split $WIDTH "Swap - ${used::-1} used, ${available::-1} available" "/ ${total::-1}")"
+    swap=$(awk '/Swap/ {print $2,$3,$4}' <<< "${freeh}")
+    IFS=" " read -r total used available <<< "${swap}"
+    label=$(print_split "${WIDTH}" "Swap - ${used::-1} used, ${available::-1} available" "/ ${total::-1}")
 
-    percentage=$(awk '/Swap/ {printf "%.0f", $3/$2*100}' <<< $freem)
-    bar="$(print_bar $WIDTH $percentage)"
+    percentage=$(awk '/Swap/ {printf "%.0f", $3/$2*100}' <<< "${freem}")
+    bar=$(print_bar "${WIDTH}" "${percentage}")
 
-    echo "$label\n$bar"
+    printf "%s\n%s" "${label}" "${bar}"
 }
 
-out="$(ram)"
-swap="$(swap)"
-[ -n "$swap" ] && out+="\n$swap"
+out=$(ram)
+swap=$(swap)
+[ -n "${swap}" ] && out+="\n${swap}"
 
-print_columns "Memory" "$out"
+print_columns "Memory" "${out}"

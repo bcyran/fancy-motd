@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 
 set -eu
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
 if type checkupdates >/dev/null 2>&1; then
     updates=$(checkupdates 2> /dev/null | wc -l )
     if type yay >/dev/null 2>&1; then
         updates_aur=$(yay -Qum 2> /dev/null | wc -l)
-        updates=$(($updates + $updates_aur))
+        updates=$((updates + updates_aur))
     fi
 elif type dnf >/dev/null 2>&1; then
-    updates=$(dnf check-update --quiet | grep -v "^$" | wc -l)
+    updates=$(dnf check-update --quiet | grep -c -v "^$")
 elif type apt >/dev/null 2>&1; then
-    updates=$(apt list --upgradable 2>/dev/null | grep upgradable | wc -l)
+    updates=$(apt list --upgradable 2>/dev/null | grep c upgradable)
 else
     updates="N/A"
 fi
 
-text="$(print_color "$updates available" $updates 1 50)"
+text="$(print_color "${updates} available" ${updates} 1 50)"
 
-print_columns "Updates" "$text"
+print_columns "Updates" "${text}"

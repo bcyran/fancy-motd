@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
-loads="$(cat /proc/loadavg | cut -d ' ' -f '1,2,3')"
+loads=$(cut -d ' ' -f '1,2,3' /proc/loadavg)
 nproc=$(nproc)
-warning_threshold=$(bc -l <<< "$nproc * 0.9")
-error_threshold=$(bc -l <<< "$nproc * 1.5")
+warning_threshold=$(bc -l <<< "${nproc} * 0.9")
+error_threshold=$(bc -l <<< "${nproc} * 1.5")
 
 text=""
-for load in $loads; do
-    text+="$(print_color $load $load $warning_threshold $error_threshold), "
+for load in ${loads}; do
+    text+="$(print_color "${load}" "${load}" "${warning_threshold}" "${error_threshold}"), "
 done
 
 print_columns "Load average" "${text::-2}"

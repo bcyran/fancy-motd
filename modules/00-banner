@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR:}/framework.sh"
 
 hostname=${HOSTNAME:-$(hostname)}
 
-print_columns "" "${CA}$(figlet $hostname)${CN}"
+print_columns "" "${CA}$(figlet "${hostname}")${CN}"

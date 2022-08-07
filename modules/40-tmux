@@ -1,22 +1,26 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
-type tmux >/dev/null 2>&1 || exit 1
+type tmux > /dev/null 2>&1 || exit 1
 
-set +e; sessions="$(tmux ls 2>&1)"; tmux_exit="$?"; set -e
+set +e
+sessions=$(tmux ls 2>&1)
+tmux_exit="$?"
+set -e
 
 text=""
-if [ $tmux_exit -ne 0 ]; then
+if [[ ${tmux_exit} -ne 0 ]]; then
     text+="no sessions\n"
 else
     while IFS= read -r line; do
-        name="$(cut -d ':' -f 1 <<< $line)"
-        windows="$(cut -d ' ' -f 2,3 <<< $line)"
-        date="$(cut -d ' ' -f 5,6,7,8 <<< $line)"
-        text+="$(print_split $WIDTH "$name ($windows)" "$date")\n"
-    done <<< $sessions
+        name=$(cut -d ':' -f 1 <<< "${line}")
+        windows=$(cut -d ' ' -f 2,3 <<< "${line}")
+        date=$(cut -d ' ' -f 5,6,7,8 <<< "${line}")
+        text+="$(print_split "${WIDTH}" "${name} (${windows})" "${date}")\n"
+    done <<< "${sessions}"
 fi
 
 print_columns "Tmux sessions" "${text::-2}"

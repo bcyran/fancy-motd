@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
-type docker >/dev/null 2>&1 || exit 1
+type docker > /dev/null 2>&1 || exit 1
 
-containers="$(docker ps -a --format "{{ .Names }}\t{{ .Status }}\t{{ .State }}")"
+containers=$(docker ps -a --format "{{ .Names }}\t{{ .Status }}\t{{ .State }}")
 
 text=""
-if [ -z "$containers"]; then
+if [ -z "${containers}" ]; then
     text+="no containers\n"
 else
     while IFS= read -r line; do
-        IFS=$'\t' read -r name description state <<< "$line"
-        case $state in
-            running) color="${CO}";;
-            paused | restarting) color="${CW}";;
-            exited | dead) color="${CE}";;
-            *) color="${CN}";;
-        esac;
-        text+="$(print_split $WIDTH "$name" "${color}${description,,}${CN}")\n"
-    done <<< $containers
+        IFS=$'\t' read -r name description state <<< "${line}"
+        case ${state} in
+            running) color="${CO}" ;;
+            paused | restarting) color="${CW}" ;;
+            exited | dead) color="${CE}" ;;
+            *) color="${CN}" ;;
+        esac
+        text+="$(print_split "${WIDTH}" "${name}" "${color}${description,,}${CN}")\n"
+    done <<< "${containers}"
 fi
 
 print_columns "Docker" "${text::-2}"
-

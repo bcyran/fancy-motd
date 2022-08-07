@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
-quote="$(fortune -s | fold -sw $WIDTH)"
+quote="$(fortune -s | fold -sw "${WIDTH}")"
 
-print_columns "Quote" "$quote"
+print_columns "Quote" "${quote}"

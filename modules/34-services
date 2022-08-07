@@ -10,16 +10,17 @@ services["sshd"]="SSH"
 services["fail2ban"]="Fail2Ban"
 services["ufw"]="UFW"
 
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
 statuses=()
 for key in "${!services[@]}"; do
-    if [ $(systemctl list-unit-files "${key}*" | wc -l) -gt 3 ]; then
-        status=$(systemctl show -p ActiveState --value "$key");
-        statuses+=("$(print_status "${services[$key]}" "$status")")
+    if [[ $(systemctl list-unit-files "${key}*" | wc -l) -gt 3 ]]; then
+        status=$(systemctl show -p ActiveState --value "${key}")
+        statuses+=("$(print_status "${services[${key}]}" "${status}")")
     fi
 done
 
-text="$(print_wrap $WIDTH "${statuses[@]}")"
+text="$(print_wrap "${WIDTH}" "${statuses[@]}")"
 
-print_columns "Services" "$text"
+print_columns "Services" "${text}"

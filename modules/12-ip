@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-source "$BASE_DIR/framework.sh"
+# shellcheck source=../framework.sh
+source "${BASE_DIR}/framework.sh"
 
-ips_v4="$(ip a | awk '/inet / && /global/ {split($2, arr, /\//); print arr[1]}')"
-IFS=$'\n' read -r -a ips <<< $ips_v4
+ips_v4=$(ip a | awk '/inet / && /global/ {split($2, arr, /\//); print arr[1]}')
+IFS=$'\n' read -r -a ips <<< "${ips_v4}"
 
-text="$(print_wrap $WIDTH "${ips[@]}")"
+text=$(print_wrap "${WIDTH}" "${ips[@]}")
 
-print_columns "IP addresses" "$text"
+print_columns "IP addresses" "${text}"
