@@ -18,6 +18,6 @@ else
     updates="N/A"
 fi
 
-text="$(print_color "${updates} available" ${updates} 1 50)"
+text="$(print_color "${updates} available" "${updates}" 1 50)"
 
 print_columns "Updates" "${text}"

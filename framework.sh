@@ -130,7 +130,7 @@ print_split() {
 
     format_string="%-${first_half_width}s%${second_half_width}s"
     # shellcheck disable=SC2059
-    printf ${format_string} "${2:0:${first_half_width}}" "${3:0:${second_half_width}}"
+    printf "${format_string}" "${2:0:${first_half_width}}" "${3:0:${second_half_width}}"
 }
 
 # Prints one line of text, truncates it at specified width and add ellipsis.
