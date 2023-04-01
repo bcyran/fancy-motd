@@ -7,4 +7,4 @@ source "${BASE_DIR}/framework.sh"
 # shellcheck disable=SC1091
 source "/etc/os-release"
 
-print_columns "OS" "${NAME} ${VERSION}"
+print_columns "OS" "${NAME} ${VERSION:-}"
