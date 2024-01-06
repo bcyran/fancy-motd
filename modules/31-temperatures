@@ -4,7 +4,7 @@ set -euo pipefail
 # shellcheck source=./framework.sh
 source "${BASE_DIR}/framework.sh"
 
-cores="$(sensors | awk '/Core/ { print substr($3, 2, length($3) - 3), substr($6, 2, length($6) - 4), substr($9, 2, length($9) - 4) }')"
+cores="$(sensors | grep Core | awk '{printf "%s ", $3} {printf "%s %s %s\n", $6, $9, $12}' | tr -d '+°C,)')"
 
 text=""
 while IFS= read -r line; do
