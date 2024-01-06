@@ -4,17 +4,35 @@ set -euo pipefail
 # shellcheck source=./framework.sh
 source "${BASE_DIR}/framework.sh"
 
-cores="$(sensors | grep Core | awk '{printf "%s ", $3} {printf "%s %s %s\n", $6, $9, $12}' | tr -d '+°C,)')"
+temp_intel() {
+    local cores out
 
-text=""
-while IFS= read -r line; do
-    IFS=" " read -r current high critical <<< "${line}"
+    cores="$(echo "${sensors_output}" | grep Core | awk '{printf "%s ", $3} {printf "%s %s %s\n", $6, $9, $12}' | tr -d '+°C,)')"
+    out=""
 
-    if [[ "${high}" == "${critical}" ]]; then
-        high=$(bc -l <<< "${high} - 20")
-    fi
+    while IFS= read -r line; do
+        IFS=" " read -r current high critical <<< "${line}"
 
-    text+="$(print_color "${current}°C" "${current}" "${high}" "${critical}"), "
-done <<< "${cores}"
+        if [[ "${high}" == "${critical}" ]]; then
+            high=$(bc -l <<< "${high} - 20")
+        fi
 
-print_columns "Temperatures" "${text::-2}"
+        out+="$(print_color "${current}°C" "${current}" "${high}" "${critical}"), "
+    done <<< "${cores}"
+
+    echo "${out::-2}"
+}
+
+temp_amd() {
+    echo "${sensors_output}" | awk '/Tdie/ {print $2}' | tr -d '+'
+}
+
+sensors_output="$(sensors)"
+
+if grep -q 'Tdie' <<< "${sensors_output}"; then
+    temps=$(temp_amd)
+else
+    temps=$(temp_intel)
+fi
+
+print_columns "Temperatures" "${temps}"
