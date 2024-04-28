@@ -6,14 +6,37 @@ source "${BASE_DIR}/framework.sh"
 
 freeh=$(free -h)
 freem=$(free -m)
+meminfo=$(cat /proc/meminfo)
+
+if [ -d /proc/spl/kstat/zfs ]; then
+    # if zfs is in use on system
+    arcstat=$(cat /proc/spl/kstat/zfs/arcstats)
+    
+    arc_current=$(awk '/^size/ { print $3 / 1048576 }' <<< "${arcstat}")
+    arc_min=$(awk '/^c_min/ { print $3 / 1048576 }' <<< "${arcstat}")
+
+    # zfs arc size is dynamic, but can't shrink below the min size
+    arcsize=$(bc <<< "$arc_current-$arc_min")
+else
+    # if zfs isn't in use, set the arc to 0
+    arcsize=0
+fi
 
 ram() {
-    local memory total used available label percentage bar
-    memory=$(awk '/Mem/ {print $2,$3,$7}' <<< "${freeh}")
-    IFS=" " read -r total used available <<< "${memory}"
-    label=$(print_split "${WIDTH}" "RAM - ${used::-1} used, ${available::-1} available" "/ ${total::-1}")
+    local availmem usedmem totalmem used avail total label percentage bar
+    
+    availmem=$(awk -v arcsize="$arcsize" '/^MemAvailable:/ { print ($2 / 1024) + arcsize }' <<< "${meminfo}")
+    usedmem=$(awk -v availmem="$availmem" '/^MemTotal:/ { print ($2 / 1024) - availmem }' <<< "${meminfo}")
+    totalmem=$(awk '/^MemTotal:/ { print ($2 / 1024) }' <<< "${meminfo}")
+    
+    #label display section (convered to GB)
+    used="$(echo "scale=1; $usedmem / 1024" | bc -l)G"
+    avail="$(echo "scale=1; $availmem / 1024" | bc -l)G"
+    total="$(echo "scale=1; $totalmem / 1024" | bc -l)G"
+    label=$(print_split "${WIDTH}" "RAM - ${used} used, ${avail} available" "/ ${total}")
 
-    percentage=$(awk '/Mem/ {printf "%.0f", ($2-$7)/$2*100}' <<< "${freem}")
+    #bar display section
+    percentage=$(echo "$usedmem / $totalmem * 100" | bc -l | xargs printf %.0f)
     bar=$(print_bar "${WIDTH}" "${percentage}")
 
     printf "%s\n%s" "${label}" "${bar}"
