@@ -30,7 +30,7 @@ ram() {
     usedmem=$(awk -v availmem="$availmem" '/^MemTotal:/ { print $2 - availmem }' <<< "${meminfo}")
     totalmem=$(awk '/^MemTotal:/ { print $2 }' <<< "${meminfo}")
     
-    #label display section (convered to GB)
+    #label display section
     used="$(numfmt --round=down --from-unit=1024 --to=iec <<< ${usedmem})"
     avail="$(numfmt --round=down --from-unit=1024 --to=iec <<< ${availmem})"
     total="$(numfmt --round=down --from-unit=1024 --to=iec <<< ${totalmem})"
