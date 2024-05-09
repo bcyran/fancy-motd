@@ -8,16 +8,16 @@ freeh=$(free -h)
 freem=$(free -m)
 meminfo=$(cat /proc/meminfo)
 
-if [ -d /proc/spl/kstat/zfs ]; then
+if [[ -d /proc/spl/kstat/zfs ]]; then
     # if zfs is in use on system
     arcstat=$(cat /proc/spl/kstat/zfs/arcstats)
-    
+
     # convert units to kb for easy calculation with /proc/meminfo
     arc_current=$(awk '/^size/ { OFMT="%.0f"; print $3/1024 }' <<< "${arcstat}")
     arc_min=$(awk '/^c_min/ { OFMT="%.0f"; print $3/1024 }' <<< "${arcstat}")
 
     # zfs arc size is dynamic, but can't shrink below the min size
-    arcsize=$(bc <<< "$arc_current-$arc_min")
+    arcsize=$(bc <<< "${arc_current}-${arc_min}")
 else
     # if zfs isn't in use, set the arc to 0
     arcsize=0
@@ -25,19 +25,19 @@ fi
 
 ram() {
     local availmem usedmem totalmem used avail total label percentage bar
-    
-    availmem=$(awk -v arcsize="$arcsize" '/^MemAvailable:/ { print $2 + arcsize }' <<< "${meminfo}")
-    usedmem=$(awk -v availmem="$availmem" '/^MemTotal:/ { print $2 - availmem }' <<< "${meminfo}")
+
+    availmem=$(awk -v arcsize="${arcsize}" '/^MemAvailable:/ { print $2 + arcsize }' <<< "${meminfo}")
+    usedmem=$(awk -v availmem="${availmem}" '/^MemTotal:/ { print $2 - availmem }' <<< "${meminfo}")
     totalmem=$(awk '/^MemTotal:/ { print $2 }' <<< "${meminfo}")
-    
-    #label display section
-    used="$(numfmt --round=down --from-unit=1024 --to=iec <<< ${usedmem})"
-    avail="$(numfmt --round=down --from-unit=1024 --to=iec <<< ${availmem})"
-    total="$(numfmt --round=down --from-unit=1024 --to=iec <<< ${totalmem})"
+
+    # label display section
+    used="$(numfmt --round=down --from-unit=1024 --to=iec <<< "${usedmem}")"
+    avail="$(numfmt --round=down --from-unit=1024 --to=iec <<< "${availmem}")"
+    total="$(numfmt --round=down --from-unit=1024 --to=iec <<< "${totalmem}")"
     label=$(print_split "${WIDTH}" "RAM - ${used} used, ${avail} available" "/ ${total}")
 
-    #bar display section
-    percentage=$(echo "$usedmem / $totalmem * 100" | bc -l | xargs printf %.0f)
+    # bar display section
+    percentage=$(echo "${usedmem} / ${totalmem} * 100" | bc -l | xargs printf %.0f)
     bar=$(print_bar "${WIDTH}" "${percentage}")
 
     printf "%s\n%s" "${label}" "${bar}"
