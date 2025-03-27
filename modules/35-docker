@@ -20,13 +20,13 @@ else
             paused | restarting) color="${CW}" ;;
             exited | dead) color="${CE}" ;;
             *) color="${CN}" ;;
+        esac
 
         # If stack is empty, it means the container is not part of a Docker Compose stack
         if [[ -n "${stack}" ]]; then
             name="${stack}.${name}"
         fi
 
-        esac
         text+="$(print_split "${WIDTH}" "${name}" "${color}${description,,}${CN}")\n"
     done <<< "${containers}"
 fi
