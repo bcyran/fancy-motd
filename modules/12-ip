@@ -5,8 +5,13 @@ set -euo pipefail
 source "${BASE_DIR}/framework.sh"
 
 ips_v4=$(ip a | awk '/inet / && /global/ {split($2, arr, /\//); print arr[1]}')
-IFS=$'\n' read -r -a ips <<< "${ips_v4}"
+IFS=$'\n' read -r -a ip4s <<< "${ips_v4}"
 
-text=$(print_wrap "${WIDTH}" "${ips[@]}")
+ips_v6=$(ip a | awk '/inet6 / && /global/ {split($2, arr, /\//); print arr[1]}')
+IFS=$'\n' read -r -a ip6s <<< "${ips_v6}"
 
-print_columns "IP addresses" "${text}"
+text4=$(print_wrap "${WIDTH}" "${ip4s[@]}")
+text6=$(print_wrap "${WIDTH}" "${ip6s[@]}")
+
+print_columns "IPv4 addresses" "${text4}"
+print_columns "IPv6 addresses" "${text6}"
