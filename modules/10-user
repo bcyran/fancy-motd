@@ -6,5 +6,8 @@ source "${BASE_DIR}/framework.sh"
 
 user=${USER:-$(id -un)}
 hostname=${HOSTNAME:-$(hostname)}
+usercount=$(users | wc -w)
+users=$(who | awk '{print $1 $5}' | paste -sd ' ')
 
 print_columns "Logged as" "${user}@${hostname}"
+print_columns "Users ($usercount)" "$users"
