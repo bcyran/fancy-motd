@@ -4,8 +4,11 @@ set -euo pipefail
 # shellcheck source=./framework.sh
 source "${BASE_DIR}/framework.sh"
 
-ip_v4=$(curl ifconfig.me/ip)
+ip_v4=$(curl -4 ifconfig.me/ip)
+ip_v6=$(curl -6 ifconfig.me/ip)
 
-text=$(print_wrap "${WIDTH}" "${ip_v4}")
+text4=$(print_wrap "${WIDTH}" "${ip_v4}")
+text6=$(print_wrap "${WIDTH}" "${ip_v6}")
 
-print_columns "Public IP address" "${text}"
+print_columns "Public IPv4 address" "${text4}"
+print_columns "Public IPv6 address" "${text6}"
