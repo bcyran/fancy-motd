@@ -5,6 +5,8 @@ set -euo pipefail
 source "${BASE_DIR}/framework.sh"
 
 type smartctl > /dev/null 2>&1 || exit 1
+# Check if the user can execute smartctl with sudo without any password
+sudo -n smartctl --version > /dev/null 2>&1 || exit 1
 
 # Disk list:
 disks=$(lsblk | awk '($6=="disk") {print $1}')
