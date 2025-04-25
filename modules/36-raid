@@ -11,6 +11,7 @@ grep "^md" /proc/mdstat > /dev/null 2>&1 || exit 1
 # examples :
 # md127 active raid5 sde1[2],sdc1[4],sdb1[0],sdd1[1] no_error
 # md0 inactive raid5 "sde1[2] sdc1[4]" error
+# shellcheck disable=SC2016
 awk_script='BEGIN {
     line = "";
 }
@@ -34,17 +35,16 @@ $1 ~ /md/ {
     line = sprintf("%s %s", infos, devices);
 }'
 
-raid_text=$(awk "$awk_script" /proc/mdstat)
+raid_text=$(awk "${awk_script}" /proc/mdstat)
 
 IFS=" " read -r md_name status format devices errors <<< "${raid_text}"
 label_name=$(print_status "${md_name}" "${status}")
-if [[ $errors == 'errors' ]]; then
+if [[ ${errors} == 'errors' ]]; then
     label_error="${CE}ERROR${CN}"
 else
     label_error="${CO}OK${CN}"
 fi
 
 label="${label_name} ${CA}${format}${CN} (${devices}) ${label_error}"
-
 
 print_columns "RAID" "${label}"

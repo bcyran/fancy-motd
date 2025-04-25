@@ -12,12 +12,12 @@ sudo -n smartctl --version > /dev/null 2>&1 || exit 1
 disks=$(lsblk | awk '($6=="disk") {print $1}')
 
 statuses=()
-for disk in $disks; do
-    smart_test=$(sudo smartctl -H "/dev/$disk" 2>/dev/null | grep '^SMART overall\|^SMART Health Status' | rev | cut -d ' ' -f1 | rev)
+for disk in ${disks}; do
+    smart_test=$(sudo smartctl -H "/dev/${disk}" 2> /dev/null | grep '^SMART overall\|^SMART Health Status' | rev | cut -d ' ' -f1 | rev)
 
-    if [[ -z "$smart_test" ]]; then
+    if [[ -z "${smart_test}" ]]; then
         smart_test="unavailable"
-    elif [[ "$smart_test" == 'PASSED' ]]; then
+    elif [[ "${smart_test}" == 'PASSED' ]]; then
         smart_test="${CO}${smart_test}${CN}"
     else
         smart_test="${CE}${smart_test}${CN}"
