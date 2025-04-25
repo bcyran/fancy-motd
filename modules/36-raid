@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+# shellcheck source=./framework.sh
+source "${BASE_DIR}/framework.sh"
+
+grep "^md" /proc/mdstat > /dev/null 2>&1 || exit 1
+
+# This awk script produce output like this from /proc/mdstat
+# <md name> <state> <raid format> "<devices>" <error>
+# examples :
+# md127 active raid5 sde1[2],sdc1[4],sdb1[0],sdd1[1] no_error
+# md0 inactive raid5 "sde1[2] sdc1[4]" error
+awk_script='BEGIN {
+    line = "";
+}
+length(line) != 0 {
+    error = "no_error";
+    if ($NF ~ /_/) {
+        error = "error";
+    };
+    printf "%s %s\n", line, error;
+    line = "";
+}
+$1 ~ /md/ {
+    infos = sprintf("%s %s %s", $1, $3, $4);
+    devices = "";
+    for (i=5; i <= NF ; i++) {
+        if (devices == "")
+            devices = $i;
+        else
+            devices = sprintf("%s,%s", devices, $i);
+    }
+    line = sprintf("%s %s", infos, devices);
+}'
+
+raid_text=$(awk "$awk_script" /proc/mdstat)
+
+IFS=" " read -r md_name status format devices errors <<< "${raid_text}"
+label_name=$(print_status "${md_name}" "${status}")
+if [[ $errors == 'errors' ]]; then
+    label_error="${CE}ERROR${CN}"
+else
+    label_error="${CO}OK${CN}"
+fi
+
+label="${label_name} ${CA}${format}${CN} (${devices}) ${label_error}"
+
+
+print_columns "RAID" "${label}"
