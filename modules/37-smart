@@ -13,17 +13,21 @@ disks=$(lsblk | awk '($6=="disk") {print $1}')
 
 statuses=()
 for disk in ${disks}; do
-    smart_test=$(sudo smartctl -H "/dev/${disk}" 2> /dev/null | grep '^SMART overall\|^SMART Health Status' | rev | cut -d ' ' -f1 | rev)
+    # Avoid getting an error if disk doesn't work with smart
+    smart_result=$(sudo smartctl -H "/dev/${disk}" 2> /dev/null || true)
+    smart_value="${CW}unavailable${CN}"
 
-    if [[ -z "${smart_test}" ]]; then
-        smart_test="unavailable"
-    elif [[ "${smart_test}" == 'PASSED' ]]; then
-        smart_test="${CO}${smart_test}${CN}"
-    else
-        smart_test="${CE}${smart_test}${CN}"
+    if echo "${smart_result}" | grep -q '^SMART overall\|^SMART Health Status'; then
+        smart_test=$(echo "${smart_result}" | grep '^SMART overall\|^SMART Health Status' | rev | cut -d ' ' -f1 | rev)
+
+        if [[ "${smart_test}" == 'PASSED' ]]; then
+            smart_value="${CO}${smart_test}${CN}"
+        else
+            smart_value="${CE}${smart_test}${CN}"
+        fi
     fi
 
-    statuses+=("${disk} ${smart_test}")
+    statuses+=("${disk} ${smart_value}")
 done
 
 text=$(print_wrap "${WIDTH}" "${statuses[@]}")
