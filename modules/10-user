@@ -6,5 +6,24 @@ source "${BASE_DIR}/framework.sh"
 
 user=${USER:-$(id -un)}
 hostname=${HOSTNAME:-$(hostname)}
+usercount=$(users | wc -w)
+
+# Create array of users with IPs
+users=()
+while IFS= read -r line; do
+    username=$(echo "$line" | awk '{print $1}')
+    # Extract IP from parentheses, regardless of column position
+    ip=$(echo "$line" | grep -oE '\([^)]+\)' | sed 's/[()]//g')
+    if [[ -n "$ip" ]]; then
+        users+=("${username} (${ip})")
+    else
+        users+=("${username}")
+    fi
+done < <(who)
 
 print_columns "Logged as" "${user}@${hostname}"
+if [[ ${#users[@]} -gt 0 ]]; then
+    print_columns "Users (${usercount})" "$(print_wrap "${users[@]}")"
+else
+    print_columns "Users (${usercount})" ""
+fi
