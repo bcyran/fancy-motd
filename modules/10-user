@@ -11,10 +11,10 @@ usercount=$(users | wc -w)
 # Create array of users with IPs
 users=()
 while IFS= read -r line; do
-    username=$(echo "$line" | awk '{print $1}')
+    username=$(echo "${line}" | awk '{print $1}')
     # Extract IP from parentheses, regardless of column position
-    ip=$(echo "$line" | grep -oE '\([^)]+\)' | sed 's/[()]//g')
-    if [[ -n "$ip" ]]; then
+    ip=$(echo "${line}" | grep -oE '\([^)]+\)' | sed 's/[()]//g')
+    if [[ -n "${ip}" ]]; then
         users+=("${username} (${ip})")
     else
         users+=("${username}")
